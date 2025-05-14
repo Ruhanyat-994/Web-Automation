@@ -1,4 +1,4 @@
-package part3_4.com.demoqa.tests;
+package com.base.base;
 
 import com.demoqa.pages.HomePage;
 import com.saucedemo.pages.BasePage;
@@ -7,7 +7,9 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
-import part2.com.saucedemo.base.Basetest;
+
+import static com.saucedemo.pages.BasePage.delay;
+import static utilities.Utility.setUtilityDriver;
 
 public class BaseTest {
 
@@ -21,23 +23,29 @@ public class BaseTest {
 
     @BeforeClass
     public void setUp(){
-        System.setProperty("webdriver.chrome.driver", "D:\\Drivers\\chromeDrover-win64\\chromedriver-win64\\chromedriver.exe");
+
+        System.setProperty("webdriver.chrome.driver","D:\\Drivers\\chromeDrover-win64\\chromedriver-win64\\chromedriver.exe");
+
         driver = new ChromeDriver();
         driver.manage().window().maximize();
 
+
     }
+
     @BeforeMethod
     public void loadApplication(){
         driver.get(DEMOQA_URL);
         basePage = new BasePage();
-        basePage.setDriver(driver);
-        homePage = new HomePage();
 
+        basePage.setDriver(driver);
+        setUtilityDriver();
+        homePage = new HomePage();
     }
 
     @AfterClass
     public void tearDown(){
-
+        delay(3000);
         driver.quit();
     }
+
 }

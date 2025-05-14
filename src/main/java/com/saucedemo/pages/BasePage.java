@@ -26,4 +26,11 @@ public class BasePage {
         find(locator).click();
     }
 
+    public static void delay(int milliseconeds){
+        try{
+            Thread.sleep(milliseconeds);
+        }catch (InterruptedException exe){
+            exe.printStackTrace();
+        }
+    }
 }
