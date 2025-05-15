@@ -1,3 +1,77 @@
+### BasePage
+
+```java
+package com.saucedemo.pages;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+public class BasePage {
+    public static WebDriver driver;
+
+    public void setDriver(WebDriver driver){
+        BasePage.driver = driver;
+
+    }
+
+    protected WebElement find(By locator){
+        return driver.findElement(locator);
+    }
+
+    protected  void set(By locater, String text){
+         find(locater).clear();
+         find(locater).sendKeys(text);
+
+    }
+
+    protected void click(By locator){
+        find(locator).click();
+    }
+
+    public static void delay(int milliseconeds){
+        try{
+            Thread.sleep(milliseconeds);
+        }catch (InterruptedException exe){
+            exe.printStackTrace();
+        }
+    }
+    protected WebElement waitForElement(By locator) {
+        WebDriverWait wait = new WebDriverWait(driver, 10);
+        return wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+    }
+
+}
+
+```
+
+```java
+protected WebElement waitForElement(By locator) {
+    WebDriverWait wait = new WebDriverWait(driver, 10);
+    return wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+}
+
+```
+
+### Explanation:
+
+- **protected WebElement waitForElement(By locator)**:
+    
+    A method that waits for a web element (given by `locator`) and returns it.
+    
+- **WebDriverWait wait = new WebDriverWait(driver, 10);**
+    
+    Creates an explicit wait that checks for a condition for up to 10 seconds.
+    
+- **wait.until(ExpectedConditions.presenceOfElementLocated(locator))**:
+    
+    Waits until the element is present in the DOM (not necessarily visible), then returns it.
+    
+
+Ensures the element exists before interacting with it, avoiding timing issues.
+
 # Scroll using JavaScriptExecutor
 
 ---
