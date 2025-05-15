@@ -1,6 +1,7 @@
 package com.base.base;
 
 import com.demoqa.pages.HomePage;
+import com.owaspjs.pages.HomepageForJS;
 import com.saucedemo.pages.BasePage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -18,8 +19,10 @@ public class BaseTest {
     protected BasePage basePage;
 
     protected HomePage homePage;
+    protected HomepageForJS homepageForJS;
 
     private String DEMOQA_URL = "https://demoqa.com/";
+    private String OWASP_URL = "http://localhost:3000/#/search";
 
     @BeforeClass
     public void setUp(){
@@ -34,13 +37,16 @@ public class BaseTest {
 
     @BeforeMethod
     public void loadApplication(){
-        driver.get(DEMOQA_URL);
+        driver.get(OWASP_URL);
         basePage = new BasePage();
 
         basePage.setDriver(driver);
         setUtilityDriver();
         homePage = new HomePage();
+        homepageForJS =  new HomepageForJS();
+
     }
+
 
     @AfterClass
     public void tearDown(){

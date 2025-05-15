@@ -16,4 +16,5 @@ public class HomePage extends BasePage {
         click(formsCard);
         return new FormsPage();
     }
+
 }
