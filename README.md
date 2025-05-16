@@ -316,3 +316,189 @@ public void testScrollingToElement() {
 ```
 
 - Calls method to scroll and click "Forms".
+
+# Working with Radio Buttons
+### 1. **Home Page for DemoQA**
+
+```java
+package com.demoqa.pages;
+
+import com.demoqa.pages.forms.FormsPageForDemoqa;
+import com.saucedemo.pages.BasePage;
+import org.openqa.selenium.By;
+
+import static utilities.JavaScriptUtility.scrollToElementJS;
+
+// This is another website but We will use the basepage that we made previously
+public class HomePageForDemoqa extends BasePage {
+    private By formsCard = By.xpath("/html/body/div[2]/div/div/div[2]/div/div[2]/div/div[3]/h5");
+
+    public FormsPageForDemoqa goToForms(){
+        scrollToElementJS(formsCard);
+
+        click(formsCard);
+        return new FormsPageForDemoqa();
+    }
+
+}
+```
+
+**Description:**
+
+This class represents the homepage of the DemoQA site.
+
+* Inherits from `BasePage`, so it can use its methods like `click()`.
+* `formsCard` identifies the "Forms" section on the page using XPath.
+* `goToForms()`:
+
+  * Scrolls to the forms card using `scrollToElementJS()`.
+  * Clicks it to navigate.
+  * Returns a new `FormsPageForDemoqa` object, chaining the navigation process.
+
+
+---
+
+### 2. **Forms Page for DemoQA**
+
+```java
+package com.demoqa.pages.forms;
+
+import com.demoqa.pages.HomePageForDemoqa;
+import org.openqa.selenium.By;
+
+import static utilities.JavaScriptUtility.scrollToElementJS;
+
+public class FormsPageForDemoqa extends HomePageForDemoqa {
+    private By practiceFormManuItem = By.xpath("/html/body/div[2]/div/div/div/div[1]/div/div/div[2]/div/ul/li/span");
+
+    public PracticeFormPage clickPracticeForm(){
+        scrollToElementJS(practiceFormManuItem);
+        click(practiceFormManuItem);
+        return new PracticeFormPage();
+    }
+}
+```
+
+**Description:**
+
+This class represents the Forms section after clicking “Forms” on the homepage.
+
+* Inherits from `HomePageForDemoqa` to reuse navigation steps.
+* `practiceFormManuItem` locates the Practice Form menu item.
+* `clickPracticeForm()`:
+
+  * Scrolls to the item.
+  * Clicks it.
+  * Returns a new `PracticeFormPage` object for further actions.
+
+Useful for moving from the Forms section to the actual form.
+
+---
+
+### 3. **Practice Form Page**
+
+```java
+package com.demoqa.pages.forms;
+
+import org.openqa.selenium.By;
+
+import static utilities.JavaScriptUtility.scrollToElementJS;
+
+public class PracticeFormPage extends FormsPageForDemoqa {
+    private By femaleRadioButton = By.xpath("/html/body/div[2]/div/div/div/div[2]/div[2]/form/div[3]/div[2]/div[2]/label");
+
+    public void clickFemaleRadioButton(){
+        scrollToElementJS(femaleRadioButton);
+        click(femaleRadioButton);
+    }
+}
+```
+
+**Description:**
+
+Represents the actual form page where a user fills details.
+
+* Inherits from `FormsPageForDemoqa`.
+* Locates the "Female" radio button using XPath.
+* `clickFemaleRadioButton()`:
+
+  * Scrolls to the button.
+  * Clicks it.
+
+Simple page-level action to simulate form filling during automation.
+
+---
+
+### 4. **Radio Button Test**
+
+```java
+package part3_4.com.demoqa.tests.part3.forms;
+
+import com.base.base.BaseTest;
+import com.demoqa.pages.forms.PracticeFormPage;
+import org.testng.annotations.Test;
+
+public class RadioButtonTest extends BaseTest {
+    @Test
+    public void testRadioButton(){
+        PracticeFormPage formPage = homePageForDemoqa.goToForms().clickPracticeForm();
+        formPage.clickFemaleRadioButton();
+    }
+}
+```
+
+**Description:**
+
+This is the actual test class to verify clicking the Female radio button.
+
+* Inherits from `BaseTest` to use setup and teardown logic.
+* Uses the page objects:
+
+  * Navigates: `HomePage → Forms → Practice Form`
+  * Then clicks the radio button.
+* Wrapped in a `@Test` method for TestNG execution.
+
+Shows a full flow from landing on homepage to performing action.
+
+---
+
+### 5. **JavaScript Utility**
+
+```java
+package utilities;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
+public class JavaScriptUtility extends Utility {
+    public static void scrollToElementJS(By locator){
+        WebElement element = driver.findElement(locator);
+        String jsScript = "arguments[0].scrollIntoView();";
+        ((JavascriptExecutor)driver).executeScript(jsScript, element);
+    }
+
+    public static void clickJS(By locator){
+        WebElement element = driver.findElement(locator);
+        JavascriptExecutor executor = (JavascriptExecutor) driver;
+        executor.executeScript("arguments[0].click();", element);
+    }
+}
+```
+
+**Description:**
+
+Provides JavaScript-based actions to interact with web elements when normal WebDriver clicks/scrolls might fail.
+
+* `scrollToElementJS(By locator)`:
+
+  * Scrolls the browser to make the element visible using JS.
+* `clickJS(By locator)`:
+
+  * Clicks an element using JS (used when Selenium click doesn't work properly).
+* Uses `JavascriptExecutor` to execute JavaScript in the browser context.
+
+This class depends on `Utility.driver`.
+
+---
