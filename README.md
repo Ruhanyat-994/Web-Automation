@@ -46,6 +46,17 @@ public class BasePage {
 }
 
 ```
+#### Some Thread Methods to Use
+```txt
+Thread.sleep(long millis)
+Thread.currentThread()
+Thread.setName(String name)
+Thread.getName()
+Thread.yield()
+Thread.join()
+Thread.activeCount()
+```
+**NOTE:Thread.sleep(long millis) is not recommended in production grade code rather use WebDriverWait**
 
 ```java
 protected WebElement waitForElement(By locator) {
