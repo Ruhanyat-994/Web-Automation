@@ -19,8 +19,8 @@ public class BasePage {
     }
 
     protected  void set(By locater, String text){
-         find(locater).clear();
-         find(locater).sendKeys(text);
+        find(locater).clear();
+        find(locater).sendKeys(text);
 
     }
 
@@ -43,3 +43,4 @@ public class BasePage {
 
 
 }
+

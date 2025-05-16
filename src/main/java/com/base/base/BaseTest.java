@@ -1,6 +1,6 @@
 package com.base.base;
 
-import com.demoqa.pages.HomePage;
+import com.demoqa.pages.HomePageForDemoqa;
 import com.owaspjs.pages.HomepageForJS;
 import com.saucedemo.pages.BasePage;
 import org.openqa.selenium.WebDriver;
@@ -18,7 +18,7 @@ public class BaseTest {
 
     protected BasePage basePage;
 
-    protected HomePage homePage;
+    protected HomePageForDemoqa homePageForDemoqa;
     protected HomepageForJS homepageForJS;
 
     private String DEMOQA_URL = "https://demoqa.com/";
@@ -37,12 +37,13 @@ public class BaseTest {
 
     @BeforeMethod
     public void loadApplication(){
-        driver.get(OWASP_URL);
+        driver.get(DEMOQA_URL);
         basePage = new BasePage();
 
         basePage.setDriver(driver);
         setUtilityDriver();
-        homePage = new HomePage();
+
+        homePageForDemoqa = new HomePageForDemoqa();
         homepageForJS =  new HomepageForJS();
 
     }
@@ -50,7 +51,7 @@ public class BaseTest {
 
     @AfterClass
     public void tearDown(){
-        delay(3000);
+        delay(2000);
         driver.quit();
     }
 
