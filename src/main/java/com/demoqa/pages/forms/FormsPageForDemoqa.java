@@ -2,6 +2,7 @@ package com.demoqa.pages.forms;
 
 import com.demoqa.pages.HomePageForDemoqa;
 import org.openqa.selenium.By;
+import org.w3c.dom.css.CSS2Properties;
 
 import static utilities.JavaScriptUtility.scrollToElementJS;
 
@@ -12,4 +13,7 @@ public class FormsPageForDemoqa extends HomePageForDemoqa {
         click(practiceFormManuItem);
         return new PracticeFormPage();
     }
+
+
+
 }
