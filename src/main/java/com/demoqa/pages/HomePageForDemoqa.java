@@ -1,9 +1,11 @@
 package com.demoqa.pages;
 
+import com.demoqa.pages.elements.ElementsPageForDemoqa;
 import com.demoqa.pages.forms.FormsPageForDemoqa;
 import com.saucedemo.pages.BasePage;
 import org.openqa.selenium.By;
 
+import static utilities.JavaScriptUtility.clickJS;
 import static utilities.JavaScriptUtility.scrollToElementJS;
 
 // This is another website but We will use the basepage that we made previously
@@ -17,10 +19,10 @@ public class HomePageForDemoqa extends BasePage {
         click(formsCard);
         return new FormsPageForDemoqa();
     }
-    public FormsPageForDemoqa goToElements(){
+    public ElementsPageForDemoqa goToElements(){
         scrollToElementJS(elementsCard);
-        click(elementsCard);
-        return new FormsPageForDemoqa();
+        clickJS(elementsCard);
+        return new ElementsPageForDemoqa();
     }
 
 }
