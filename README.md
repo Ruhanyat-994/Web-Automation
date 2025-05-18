@@ -573,3 +573,182 @@ Provides JavaScript-based actions to interact with web elements when normal WebD
 This class depends on `Utility.driver`.
 
 ---
+
+# Automating the Tables 
+
+## `ElementsPageForDemoqa.java`
+
+**Full Code:**
+
+```java
+package com.demoqa.pages.elements;
+
+import com.demoqa.pages.HomePageForDemoqa;
+import com.saucedemo.pages.BasePage;
+import org.openqa.selenium.By;
+
+import static utilities.JavaScriptUtility.clickJS;
+import static utilities.JavaScriptUtility.scrollToElementJS;
+
+public class ElementsPageForDemoqa extends HomePageForDemoqa {
+
+    private By webTablesElement = By.xpath("/html/body/div[2]/div/div/div/div[1]/div/div/div[1]/div/ul/li[4]/span");
+
+    public WebElementPage clickWebtablesElement() {
+        scrollToElementJS(webTablesElement);
+        clickJS(webTablesElement);
+        return new WebElementPage();
+    }
+
+}
+```
+
+---
+
+### 1. **`ElementsPageForDemoqa.java`**
+
+**Location:** `com.demoqa.pages.elements`
+
+**Purpose:**
+Represents the "Elements" section of the DemoQA site. Navigates to **Web Tables**.
+
+```java
+private By webTablesElement = By.xpath("/html/body/div[2]/div/div/div/div[1]/div/div/div[1]/div/ul/li[4]/span");
+```
+
+* Locates the **Web Tables** menu item in the sidebar using absolute XPath.
+
+```java
+public WebElementPage clickWebtablesElement() { ... }
+```
+
+* Scrolls to **Web Tables** using JavaScript.
+* Clicks it using JavaScript.
+* Returns a new `WebElementPage` object to proceed.
+
+---
+
+## `WebElementPage.java`
+
+**Full Code:**
+
+```java
+package com.demoqa.pages.elements;
+
+import org.openqa.selenium.By;
+
+import static utilities.JavaScriptUtility.clickJS;
+
+public class WebElementPage extends ElementsPageForDemoqa {
+
+    private By registrationAgeField = By.id("age");
+    private By sumitButton = By.id("submit");
+
+    public void clickEditButton() {
+        By editButton = By.xpath("//*[@id=\"edit-record-2\"]");
+        clickJS(editButton);
+    }
+
+    public void setAge(String age) {
+        set(registrationAgeField, age);
+    }
+
+    public void clickSubmitButton() {
+        clickJS(sumitButton);
+    }
+}
+```
+
+---
+
+### 2. **`WebElementPage.java`**
+
+**Location:** `com.demoqa.pages.elements`
+
+**Purpose:**
+Handles form interactions for the **Web Tables** section.
+
+```java
+private By registrationAgeField = By.id("age");
+private By sumitButton = By.id("submit");
+```
+
+* Locates the **Age input field** and the **Submit button**.
+
+```java
+public void clickEditButton() { ... }
+```
+
+* Clicks the **Edit** button for the second row (`record-2`) using JavaScript.
+
+```java
+public void setAge(String age) { ... }
+```
+
+* Inputs the new age value into the form.
+
+```java
+public void clickSubmitButton() { ... }
+```
+
+* Clicks the **Submit** button using JavaScript.
+
+---
+
+## `TablesTest.java`
+
+**Full Code:**
+
+```java
+package part3_4.com.demoqa.tests.part3.elements;
+
+import com.base.base.BaseTest;
+import com.demoqa.pages.elements.WebElementPage;
+import org.testng.annotations.Test;
+
+import static com.saucedemo.pages.BasePage.delay;
+
+public class TablesTest extends BaseTest {
+
+    @Test
+    public void testTables() {
+
+        String expectedAge = "99";
+
+        WebElementPage webTablePage = homePageForDemoqa
+                .goToElements()
+                .clickWebtablesElement();
+
+        webTablePage.clickEditButton();
+        webTablePage.setAge(expectedAge);
+        webTablePage.clickSubmitButton();
+
+        delay(3000); // wait for 3 seconds after submitting
+    }
+}
+```
+
+---
+
+### 3. **`TablesTest.java`**
+
+**Location:** `part3_4.com.demoqa.tests.part3.elements`
+
+**Purpose:**
+Test to validate editing the **Age** field inside the Web Table.
+
+```java
+@Test
+public void testTables() { ... }
+```
+
+* Sets a new **expected age** value (`"99"`).
+* Navigates: `homePageForDemoqa → Elements → Web Tables`.
+* Clicks **Edit** on record 2.
+* Inputs new age.
+* Clicks **Submit**.
+* Waits 3 seconds using `delay(3000)` to let UI update.
+
+---
+
+Let me know when you want to move on to the next set of files.
