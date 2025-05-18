@@ -749,6 +749,3 @@ public void testTables() { ... }
 * Clicks **Submit**.
 * Waits 3 seconds using `delay(3000)` to let UI update.
 
----
-
-Let me know when you want to move on to the next set of files.
