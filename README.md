@@ -393,6 +393,77 @@ This class represents the Forms section after clicking “Forms” on the homepa
 
 Useful for moving from the Forms section to the actual form.
 
+**Deeper Description**
+It will help me to ace the interview!
+
+### Method Return Type in Java
+
+In the following method declaration:
+
+```java
+public PracticeFormPage clickPracticeForm() {
+    scrollToElementJS(practiceFormManuItem);
+    click(practiceFormManuItem);
+    return new PracticeFormPage();
+}
+```
+
+**`PracticeFormPage`** is the **return type** of the method `clickPracticeForm`.
+
+---
+
+### Purpose of Using the `PracticeFormPage` Return Type
+
+Returning an instance of `PracticeFormPage` allows:
+
+* Method chaining, enabling test flows like `formsPage.clickPracticeForm().fillForm()`.
+* A transition from one page object (`FormsPageForDemoqa`) to another (`PracticeFormPage`).
+* Clear representation of navigation between different parts of the application, following the Page Object Model (POM) pattern.
+
+---
+
+### Example Usage
+
+```java
+PracticeFormPage formPage = formsPage.clickPracticeForm();
+formPage.fillName("John", "Doe");
+```
+
+This is possible because `clickPracticeForm()` returns an instance of `PracticeFormPage`.
+
+---
+
+### Comparison
+
+If the return type were `void`:
+
+```java
+public void clickPracticeForm() {
+    // actions
+}
+```
+
+Then the following would not work:
+
+```java
+formsPage.clickPracticeForm().fillName("John", "Doe"); // compile-time error
+```
+
+You would have to break the chain:
+
+```java
+formsPage.clickPracticeForm();
+PracticeFormPage formPage = new PracticeFormPage();
+formPage.fillName("John", "Doe");
+```
+
+---
+
+### When to Return `new PracticeFormPage()` vs `this`
+
+* `return new PracticeFormPage();` is appropriate when the method navigates to a new page.
+* `return this;` would be used if the page remains the same after the action.
+
 ---
 
 ### 3. **Practice Form Page**
