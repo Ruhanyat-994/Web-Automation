@@ -10,12 +10,13 @@ import static utilities.JavaScriptUtility.scrollToElementJS;
 
 public class ElementsPageForDemoqa extends HomePageForDemoqa {
 
-    private By webTablesElement = By.xpath("/html/body/div[2]/div/div/div/div[1]/div/div/div[1]/div/ul/li[4]/span");
-    public WebElementPage clickWebtablesElement(){
-        scrollToElementJS(webTablesElement);
-        clickJS(webTablesElement);
+    private By webTablesMenu = By.xpath("/html/body/div[2]/div/div/div/div[1]/div/div/div[1]/div/ul/li[4]/span");
+    public WebElementPage clickWebTable(){
+        scrollToElementJS(webTablesMenu);
+        clickJS(webTablesMenu);
         return new WebElementPage();
     }
+
 
 
 
