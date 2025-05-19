@@ -749,3 +749,141 @@ public void testTables() { ... }
 * Clicks **Submit**.
 * Waits 3 seconds using `delay(3000)` to let UI update.
 
+
+
+
+
+# Working With Links (ElementsPageForDemoqa)
+```java
+package com.demoqa.pages.elements;
+
+import com.demoqa.pages.HomePageForDemoqa;
+import com.saucedemo.pages.BasePage;
+import org.openqa.selenium.By;
+
+import static utilities.JavaScriptUtility.clickJS;
+import static utilities.JavaScriptUtility.scrollToElementJS;
+
+public class ElementsPageForDemoqa extends HomePageForDemoqa {
+
+    private By webTablesMenu = By.xpath("/html/body/div[2]/div/div/div/div[1]/div/div/div[1]/div/ul/li[4]/span");
+    private By linksMenu = By.xpath("//span[text()='Links']");
+
+    public WebElementPage clickWebTable(){
+        scrollToElementJS(webTablesMenu);
+        clickJS(webTablesMenu);
+        return new WebElementPage();
+    }
+
+    public LinksPage clickLinksElements(){
+        scrollToElementJS(linksMenu);
+        clickJS(linksMenu);
+        return new LinksPage();
+    }
+}
+```
+
+### **Explanation:**
+
+This class is a part of the Page Object Model (POM) and focuses on interacting with the **"Elements"** section in the DemoQA site.
+
+* It **inherits from `HomePageForDemoqa`**, meaning it likely has navigation or layout structure methods inherited from the homepage.
+* Two key UI elements are targeted using XPath:
+
+  * `webTablesMenu`: The menu for Web Tables.
+  * `linksMenu`: The menu for Links.
+
+Both `clickWebTable()` and `clickLinksElements()` follow the same pattern:
+
+1. Scroll to the element using `scrollToElementJS()`.
+2. Click the element using `clickJS()` (bypasses Selenium’s typical click issues).
+3. Return a **new page object**, allowing for **method chaining** in test code.
+
+This makes it easy to move from one page to another while keeping the tests clean.
+
+---
+
+## **2.LinksPage**
+
+```java
+package com.demoqa.pages.elements;
+
+import org.openqa.selenium.By;
+
+import static utilities.JavaScriptUtility.clickJS;
+import static utilities.JavaScriptUtility.scrollToElementJS;
+
+public class LinksPage extends ElementsPageForDemoqa {
+
+    private By forbiddenLinksPath = By.xpath("//a[@id='forbidden']");
+    private By responseMessage = By.xpath("//p[@id='linkResponse']");
+
+    public void clickLink() {
+        scrollToElementJS(forbiddenLinksPath);
+        clickJS(forbiddenLinksPath);
+    }
+
+    public String getResponse() {
+        delay(2000);
+        scrollToElementJS(responseMessage);
+        return find(responseMessage).getText();
+    }
+}
+```
+
+### **Explanation:**
+
+This page class handles interaction with the **"Links"** section, specifically the link that triggers a **403 Forbidden** response.
+
+* `clickLink()` scrolls to and clicks the "Forbidden" link.
+* `getResponse()` waits for the response, scrolls to the message, and returns the text (like "403 Forbidden").
+
+Here’s what you’re testing:
+
+* Clicking a specific link (with ID `forbidden`) that simulates an unauthorized access.
+* After clicking, the app shows a response (like an error or status code), which gets fetched by the test using `getResponse()`.
+
+This method is essential for **validating HTTP response behavior from the frontend**.
+
+---
+
+## **3. Validating the Link Response – LinksTest**
+
+```java
+package part3_4.com.demoqa.tests.part3.elements;
+
+import com.base.base.BaseTest;
+import com.demoqa.pages.elements.LinksPage;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+public class LinksTest extends BaseTest {
+
+    @Test
+    public void testLinks() {
+        LinksPage linksPage = homePageForDemoqa.goToElements().clickLinksElements();
+        linksPage.clickLink();
+        String linksCheck = linksPage.getResponse();
+
+        Assert.assertTrue(linksCheck.contains("403") && linksCheck.contains("Forbidden"),
+                "\n Actual Response (" + linksCheck + ")\n doesn't contain 403 and Forbidden String");
+    }
+}
+```
+
+### **Explanation:**
+
+This is your actual test case using **TestNG**, focused on verifying the **403 Forbidden** behavior.
+
+* The test flows like this:
+
+  1. Navigate from the homepage to the Elements page.
+  2. Click the "Links" option.
+  3. Click the "Forbidden" link.
+  4. Capture the result and assert it contains `"403"` and `"Forbidden"`.
+
+The `Assert.assertTrue()` is used to validate the result. If the expected text isn't present, the test fails and prints the actual result.
+
+This test is a **great example of status code validation from UI**, making sure frontend responses match backend rules.
+
+---
