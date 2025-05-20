@@ -887,3 +887,192 @@ The `Assert.assertTrue()` is used to validate the result. If the expected text i
 This test is a **great example of status code validation from UI**, making sure frontend responses match backend rules.
 
 ---
+
+
+
+# DropDown Selection
+
+```java
+package com.demoqa.pages.widgets;
+
+import com.demoqa.pages.HomePageForDemoqa;
+import org.openqa.selenium.By;
+
+import static utilities.JavaScriptUtility.clickJS;
+import static utilities.JavaScriptUtility.scrollToElementJS;
+
+public class WidgetsPageForDemoqa extends HomePageForDemoqa {
+   private By selectMenu = By.xpath("//span[text()='Select Menu']");
+
+   public SelectManuPage clickSelectMenuButton(){
+       scrollToElementJS(selectMenu);
+       clickJS(selectMenu);
+       return new SelectManuPage();
+   }
+}
+```
+
+### Explanation:
+
+This class handles the interaction with the **Widgets** section of the demo site. It extends `HomePageForDemoqa`, inheriting navigation capabilities.
+The `clickSelectMenuButton()` method does two important things:
+
+1. **Scroll to the "Select Menu" element** using `scrollToElementJS` — a utility that ensures the element is visible before interaction.
+2. **Click on the element using JavaScript** (`clickJS`) — useful when Selenium's standard click doesn't work reliably (e.g., hidden elements or overlays).
+3. **Returns a new instance of `SelectManuPage`**, indicating that we are now interacting with the Select Menu page.
+
+---
+
+## Performing Multi-Select Dropdown Operations
+
+```java
+package com.demoqa.pages.widgets;
+
+import org.openqa.selenium.By;
+import java.util.List;
+
+import static utilities.DropDownUtility.*;
+import static utilities.JavaScriptUtility.*;
+
+public class SelectManuPage extends WidgetsPageForDemoqa {
+    private By multiSelectDropDown = By.xpath("//div[text()='Select...']");
+    private By standardMultiSelect = By.id("cars");
+
+    public void clickMultiSelectDropDown(){
+        scrollToElementJS(multiSelectDropDown);
+        clickJS(multiSelectDropDown);
+        find(multiSelectDropDown).sendKeys("Blue");
+        new WidgetsPageForDemoqa();
+    }
+
+    public void selectStandardMulti(String text){
+        scrollToElementJS(standardMultiSelect);
+        selectByVisibleText(standardMultiSelect, text);
+    }
+
+    public void selectStandardMulti(int index){
+        scrollToElementJS(standardMultiSelect);
+        selectByIndex(standardMultiSelect, index);
+    }
+
+    public void deSelectStandardMulti(int index){
+        scrollToElementJS(standardMultiSelect);
+        deSelectByIndex(standardMultiSelect, index);
+    }
+
+    public List<String> getAllSelectedStandardMultiOptions(){
+        return getAllSelectedOptions(standardMultiSelect);
+    }
+}
+```
+
+### Explanation:
+
+This class handles actions specific to the **Select Menu** page. It allows us to interact with two types of dropdowns:
+
+* **Custom multi-select dropdown** (`multiSelectDropDown`)
+* **Standard `<select multiple>` dropdown** (`standardMultiSelect`)
+
+Key actions:
+
+* `selectStandardMulti(String text)`: Selects an option by visible label (e.g., "Volvo").
+* `selectStandardMulti(int index)`: Selects an option by its position in the list.
+* `deSelectStandardMulti(int index)`: Deselects an option using its index.
+* `getAllSelectedStandardMultiOptions()`: Returns the list of selected option texts.
+
+Scrolling is done before each interaction to avoid "element not clickable" issues.
+
+---
+
+## Utility Methods for Dropdown Handling
+
+```java
+package utilities;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.Select;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
+public class DropDownUtility extends Utility {
+    private static Select findDropDown(By locator){
+        return new Select(driver.findElement(locator));
+    }
+
+    public static void selectByVisibleText(By locator, String text){
+        findDropDown(locator).selectByVisibleText(text);
+    }
+
+    public static void selectByIndex(By locator, int index){
+        findDropDown(locator).selectByIndex(index);
+    }
+
+    public static void deSelectByIndex(By locator, int index){
+        findDropDown(locator).deselectByIndex(index);
+    }
+
+    public static List<String> getAllSelectedOptions(By locator){
+        List<WebElement> selected = findDropDown(locator).getAllSelectedOptions();
+        return selected.stream().map(WebElement::getText).collect(Collectors.toList());
+    }
+}
+```
+
+### Explanation:
+
+This utility class simplifies working with `<select>` dropdowns. Instead of repeating `new Select(driver.findElement(...))`, we use concise helper methods:
+
+* `selectByVisibleText()` and `selectByIndex()` handle option selection.
+* `deSelectByIndex()` is used to unselect multi-options.
+* `getAllSelectedOptions()` returns all selected texts as a list — useful for assertions or logging.
+
+Using this utility improves code readability and reduces duplication.
+
+---
+
+## Testing Multi-Select Dropdown Functionality
+
+```java
+package part3_4.com.demoqa.tests.part3.widgets;
+
+import com.base.base.BaseTest;
+import com.demoqa.pages.widgets.SelectManuPage;
+import org.testng.Assert;
+import org.testng.annotations.Test;
+
+import java.util.List;
+
+public class DropDownsTest extends BaseTest {
+
+    @Test
+    public void testingDropDowns(){
+        SelectManuPage dropdownTesting = homePageForDemoqa.goToWidgets().clickSelectMenuButton();
+
+        dropdownTesting.selectStandardMulti("Volvo");
+        dropdownTesting.selectStandardMulti(1);     // Saab
+        dropdownTesting.selectStandardMulti(3);     // Audi
+        dropdownTesting.selectStandardMulti(2);     // Opel
+        dropdownTesting.deSelectStandardMulti(3);   // Deselect Audi
+
+        List<String> actualSelectedOptions = dropdownTesting.getAllSelectedStandardMultiOptions();
+
+        Assert.assertTrue(actualSelectedOptions.contains("Volvo"));
+        Assert.assertTrue(actualSelectedOptions.contains("Opel"));
+        Assert.assertTrue(actualSelectedOptions.contains("Saab"));
+        Assert.assertTrue(actualSelectedOptions.contains("Audi"), "\nAudi is selected as an Option\n");
+    }
+}
+```
+
+### Explanation:
+
+This is a **TestNG test** validating the standard multi-select dropdown:
+
+1. Navigates to the **Select Menu**.
+2. Selects multiple options by visible text and index.
+3. Deselects one option.
+4. Verifies the final selected options with assertions.
+
+---
