@@ -1028,6 +1028,13 @@ This utility class simplifies working with `<select>` dropdowns. Instead of repe
 * `deSelectByIndex()` is used to unselect multi-options.
 * `getAllSelectedOptions()` returns all selected texts as a list — useful for assertions or logging.
 
+| Part                            | Meaning                                                                                                                             |
+| ------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| `selected.stream()`             | Converts the list of `WebElement`s into a Java **Stream** (a modern, functional-style way to process collections).                  |
+| `.map(WebElement::getText)`     | For each selected element, call `.getText()` — this gets the **visible text** of the `<option>`  |
+| `.collect(Collectors.toList())` | Collects the results into a **List<String>** and returns it.                                                                        |
+
+
 Using this utility improves code readability and reduces duplication.
 
 ---
