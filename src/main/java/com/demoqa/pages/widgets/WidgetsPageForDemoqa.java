@@ -19,6 +19,13 @@ public class WidgetsPageForDemoqa extends HomePageForDemoqa {
 
     }
 
+    private By selectDatePicker = By.xpath("//span[text()='Date Picker']");
+
+    public SelectDatePicker clickSelectDatePicker(){
+        scrollToElementJS(selectDatePicker);
+        clickJS(selectDatePicker);
+        return new SelectDatePicker();
+    }
 
 }
 

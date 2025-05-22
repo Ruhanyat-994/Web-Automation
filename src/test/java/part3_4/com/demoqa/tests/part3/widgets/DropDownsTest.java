@@ -1,6 +1,7 @@
 package part3_4.com.demoqa.tests.part3.widgets;
 
 import com.base.base.BaseTest;
+import com.demoqa.pages.widgets.SelectDatePicker;
 import com.demoqa.pages.widgets.SelectManuPage;
 import com.demoqa.pages.widgets.WidgetsPageForDemoqa;
 import org.testng.Assert;
@@ -25,6 +26,9 @@ public class DropDownsTest extends BaseTest {
         Assert.assertTrue(actualSelectedOptions.contains("Saab"));
         Assert.assertTrue(actualSelectedOptions.contains("Audi"),"\n" +
                 "Audi is selected as an Option\n");
+
+
+
     }
 
 }
